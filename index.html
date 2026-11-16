@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>湯守りの手引き</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --surface: #f6f6f4;
+    --surface-raised: #ffffff;
+    --text: #222221;
+    --text-muted: #6c6c68;
+    --accent: #37524a;
+    --accent-ink: #2a3f39;
+    --accent-soft: #e4ebe8;
+    --secondary: #37524a;
+    --secondary-soft: #eef1ef;
+    --border: #e4e3de;
+    --note-bg: #f2f1ec;
+    --note-border: #ddd9cf;
+    color-scheme: light;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141413;
+      --surface: #1c1c1a;
+      --surface-raised: #222220;
+      --text: #ededea;
+      --text-muted: #a5a39b;
+      --accent: #7fab9c;
+      --accent-ink: #9bc2b4;
+      --accent-soft: #263430;
+      --secondary: #7fab9c;
+      --secondary-soft: #223029;
+      --border: #333230;
+      --note-bg: #1f1f1c;
+      --note-border: #363430;
+      color-scheme: dark;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #141413;
+    --surface: #1c1c1a;
+    --surface-raised: #222220;
+    --text: #ededea;
+    --text-muted: #a5a39b;
+    --accent: #7fab9c;
+    --accent-ink: #9bc2b4;
+    --accent-soft: #263430;
+    --secondary: #7fab9c;
+    --secondary-soft: #223029;
+    --border: #333230;
+    --note-bg: #1f1f1c;
+    --note-border: #363430;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { margin: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Zen Kaku Gothic New", "Hiragino Sans", "Noto Sans JP", system-ui, sans-serif;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 640px;
+    margin: 0 auto;
+    padding-inline: 20px;
+    padding-block: 0 48px;
+  }
+
+  header.top {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 10;
+    background: color-mix(in srgb, var(--bg) 94%, transparent);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--border);
+    padding-block: calc(env(safe-area-inset-top, 0px) + 14px) 10px;
+    margin-bottom: 8px;
+  }
+
+  .top-inner {
+    max-width: 640px;
+    margin: 0 auto;
+    padding-inline: 20px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .brand .kicker {
+    font-family: "Zen Maru Gothic", sans-serif;
+    font-weight: 700;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    color: var(--accent-ink);
+    background: var(--accent-soft);
+    padding: 3px 9px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .brand h1 {
+    font-family: "Zen Maru Gothic", sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text);
+  }
+
+  nav.jump {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+  nav.jump::-webkit-scrollbar { display: none; }
+
+  nav.jump a {
+    flex: none;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--secondary);
+    background: var(--secondary-soft);
+    border: 1px solid transparent;
+    padding: 6px 13px;
+    border-radius: 999px;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .intro {
+    padding-block: 18px 6px;
+  }
+
+  .intro h2 {
+    font-family: "Zen Maru Gothic", sans-serif;
+    font-size: 1.55rem;
+    line-height: 1.4;
+    text-wrap: balance;
+    margin: 0 0 10px;
+    font-weight: 900;
+  }
+
+  .intro p {
+    color: var(--text-muted);
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+  main {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 20px;
+  }
+
+  section.card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 20px 20px 22px;
+    scroll-margin-top: calc(env(safe-area-inset-top, 0px) + 96px);
+  }
+
+  .card-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .icon {
+    flex: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: var(--secondary-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .icon svg {
+    width: 21px;
+    height: 21px;
+    stroke: var(--secondary);
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .card-head h3 {
+    font-family: "Zen Maru Gothic", sans-serif;
+    font-size: 1.12rem;
+    font-weight: 700;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .card-head .eyebrow {
+    display: block;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+    margin-bottom: 2px;
+  }
+
+  .card p { margin: 0 0 10px; }
+  .card p:last-child { margin-bottom: 0; }
+
+  .card ul, .card ol {
+    margin: 0 0 10px;
+    padding-left: 1.25em;
+  }
+  .card li { margin-bottom: 4px; }
+  .card ul:last-child, .card ol:last-child { margin-bottom: 0; }
+
+  .sub {
+    font-weight: 700;
+    color: var(--accent-ink);
+    margin: 14px 0 6px;
+    font-size: 0.95rem;
+  }
+  .sub:first-child { margin-top: 0; }
+
+  .rule-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 10px 0 14px;
+  }
+  .rule-pair .slot {
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 12px;
+  }
+  .rule-pair .slot .label {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-bottom: 3px;
+  }
+  .rule-pair .slot .value {
+    font-weight: 700;
+    font-size: 0.92rem;
+  }
+  .rule-pair .example {
+    grid-column: 1 / -1;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+
+  .note {
+    background: var(--note-bg);
+    border: 1px solid var(--note-border);
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 0.88rem;
+    margin-top: 12px;
+    color: var(--text);
+  }
+  .note .note-label {
+    font-weight: 700;
+    color: var(--accent-ink);
+    font-size: 0.78rem;
+    display: block;
+    margin-bottom: 3px;
+  }
+
+  .ask-staff {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--secondary-soft);
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 0.88rem;
+  }
+  .ask-staff svg {
+    flex: none;
+    width: 18px;
+    height: 18px;
+    stroke: var(--secondary);
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .ask-staff b { color: var(--secondary); }
+
+  .link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    background: var(--accent);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 11px 18px;
+    border-radius: 999px;
+    text-decoration: none;
+  }
+  .link-btn svg {
+    width: 16px;
+    height: 16px;
+    stroke: #ffffff;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .example-box {
+    background: var(--surface-raised);
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 0.86rem;
+    color: var(--text-muted);
+    margin-top: 10px;
+  }
+  .example-box .example-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--secondary);
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  footer {
+    margin-top: 28px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    text-align: center;
+  }
+
+  @media (max-width: 400px) {
+    .rule-pair { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <span class="kicker">NiHITARU サウナ</span>
+      <h1>湯守りの手引き</h1>
+    </div>
+    <nav class="jump">
+      <a href="#timecard">打刻</a>
+      <a href="#overtime">残業・修正申請</a>
+      <a href="#dress">服装</a>
+      <a href="#key">鍵</a>
+      <a href="#allowance">手当</a>
+      <a href="#benefit">福利厚生</a>
+      <a href="#bath">入浴・社割</a>
+      <a href="#uniform">制服</a>
+      <a href="#shift">シフト提出</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="intro">
+    <h2>はじめて現場に立つ日のために。</h2>
+    <p>打刻のしかたから、シフトの出し方まで。迷ったときはここを開いてください。</p>
+  </div>
+
+  <main>
+
+    <section class="card" id="timecard">
+      <div class="card-head">
+        <span class="icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2"/><path d="M9 2h6"/></svg>
+        </span>
+        <div>
+          <span class="eyebrow">勤怠</span>
+          <h3>打刻のしかた（出退勤・休憩）</h3>
+        </div>
+      </div>
+      <p><b>場所：</b>店舗PC（フロント）のAirシフト</p>
+      <ol>
+        <li>タイムカードの画面を開く</li>
+        <li>自分の名前を選択する</li>
+        <li>出勤・退勤・休憩入り・休憩戻りに応じて、該当の箇所を押す</li>
+      </ol>
+      <div class="note">
+        <span class="note-label">サウナとPlayで店舗が違います</span>
+        画面に自分の名前が出てこない場合は、店舗を切り替えてからもう一度タイムカードを押してください。
+      </div>
+      <div class="ask-staff">
+        <svg viewBox="0 0 24 24"><path d="M8.5 9a3.5 3.5 0 1 1 5.5 2.9c-.9.6-1.5 1.3-1.5 2.4"/><circle cx="12" cy="17.2" r=".4" fill="currentColor"/><circle cx="12" cy="12" r="10"/></svg>
+        わからないときは <b>サウナスタッフ・岩本・水上</b> のいずれかに確認してください。
+      </div>
+    </section>
+
+    <section class="card" id="overtime">
+      <div class="card-head">
+        <span class="icon">
+          <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+        </span>
+        <div>
+          <span class="eyebrow">申請</span>
+          <h3>残業・遅刻・打刻修正の申請</h3>
+        </div>
+      </div>
+      <p>出勤・退勤の打刻が、シフトに対して下の時間より前後にずれた場合は申請が必要です。休憩の打刻がずれた場合も同様です。</p>
+      <div class="rule-pair">
+        <div class="slot">
+          <div class="label">① 出勤打刻</div>
+          <div class="value">シフト開始の5分前から</div>
+        </div>
+        <div class="slot">
+          <div class="label">② 退勤打刻</div>
+          <div class="value">シフト終了の10分後まで</div>
+        </div>
+        <div class="example">例：シフトが17:00〜23:00の場合 → ①16:55／②23:10</div>
+      </div>
+      <a class="link-btn" href="https://forms.gle/tUvM9cGr72sotwoa9" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M9 12h11M16 7l5 5-5 5"/><path d="M13 5H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h8"/></svg>
+        申請フォームを開く
+      </a>
+    </section>
+
+    <section class="card" id="dress">
+      <div class="card-head">
+        <span class="icon">
+          <svg viewBox="0 0 24 24"><path d="M9 4 6 7v3h2v10h8V10h2V7l-3-3-2 2-2-2Z"/></svg>
+        </span>
+        <div>
+          <span class="eyebrow">サウナ</span>
+          <h3>勤務中の服装・持ち物</h3>
+        </div>
+      </div>
+      <ul>
+        <li>スリッパかサンダル</li>
+        <li>制服が半袖で寒いため、華美ではない長袖のインナー</li>
+        <li>ズボンは濡れても大丈夫なもの（長ズボンも可）。華美ではないこと</li>
+      </ul>
+      <div class="note">
+        <span class="note-label">ロゴ・柄について</span>
+        インナー・ズボンともに、ロゴや文字、イラストが目立つものは避けてください。
+      </div>
+    </section>
+
+    <section class="card" id="key">
+      <div class="card-head">
+        <span class="icon">
+          <svg viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 5l3 3M19 2l3 3"/></svg>
+        </span>
+        <div>
+          <span class="eyebrow">店舗設備</span>
+          <h3>鍵の場所・解錠方法</h3>
+        </div>
+      </div>
+      <ul>
+        <li>使用した鍵は、サウナのバックヤードにあるキーボックスに戻してください</li>
+      </ul>
+      <div class="note">
+        <span class="note-label">キーボックスを閉めるとき</span>
+        施錠後は必ずダイアルを動かし、番号を変更してください。
+      </div>
+      <div class="ask-staff">
+        <svg viewBox="0 0 24 24"><path d="M8.5 9a3.5 3.5 0 1 1 5.5 2.9c-.9.6-1.5 1.3-1.5 2.4"/><circle cx="12" cy="17.2" r=".4" fill="currentColor"/><circle cx="12" cy="12" r="10"/></svg>
+        キーボックスの場所・番号は <b>社員</b> に確認してください（解説動画は準備中です）。
+      </div>
+    </section>
+
+    <section class="card" id="allowance">
+      <div class="card-head">
+        <span class="icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9 10h4.5a2 2 0 1 1 0 4H9"/></svg>
+        </span>
+        <div>
+          <span class="eyebrow">給与</span>
+          <h3>手当の種類と記入方法</h3>
+        </div>
+      </div>
+      <p class="sub">早朝手当</p>
+      <p>6:00〜9:30の間に勤務した際、15分単位で50円発生します。</p>
+      <p class="sub">Stay清掃手当</p>
+      <p>Stay清掃を30分以上行った際、人数に応じて手当が発生します。</p>
+      <div class="note">
+        <span class="note-label">忘れずに</span>
+        時間管理票に名前の記載がない場合は発生しません。
+      </div>
+      <p class="sub" style="margin-top:14px">アウフグース手当</p>
+      <p>アウフグース1回あたり150円の手当が発生します。</p>
+    </section>
+
+    <section class="card" id="benefit">
+      <div class="card-head">
+        <span class="icon">
+          <svg viewBox="0 0 24 24"><path d="M4 9a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4Z"/><path d="M14 7v10" stroke-dasharray="2 3"/></svg>
+        </span>
+        <div>
+          <span class="eyebrow">福利厚生</span>
+          <h3>スパ施設チケットについて</h3>
+        </div>
+      </div>
+      <p>他のサウナ・スパ施設を無料で利用できるチケットを配布しています。</p>
+      <p class="sub">チケットを使ったら</p>
+      <p>訪れた施設の感想と、自分の職場に活かせそうな気づきを、LINEグループ「おしゃべりルーム」に<b>200字以上</b>で投稿してください。</p>
+      <div class="example-box">
+        <span class="example-label">記入例</span>
+        〇〇サウナへ行ってきました。ミスト・中温・高温の3室構成で、高温はストーブ横の最上段が特に熱く感じました。水風呂は2種類あり、休憩スペースも広め。整いやすい導線は自分の店舗でも参考にできそうだと思いました。
+      </div>
+      <div class="note" style="margin-top:14px">
+        <span class="note-label">退職時の対応</span>
+        未使用チケットがある場合は速やかに返却してください。ご依頼後も報告・返却がない場合、1枚あたり2,000円を給与から控除します。配布を希望する方は<b>水上</b>まで。
+      </div>
+    </section>
+
+    <section class="card" id="bath">
+      <div class="card-head">
+        <span class="icon">
+          <svg viewBox="0 0 24 24"><path d="M4 13c1 2 2-1 3 0s2 2 3 0 2-1 3 0 2 2 3 0 2-1 3 0"/><path d="M5 18h14a0 0 0 0 1 0 0"/><path d="M7 9c0-2 1.5-4 1-5"/></svg>
+        </span>
+        <div>
+          <span class="eyebrow">特典</span>
+          <h3>まかないサウナ・社割</h3>
+        </div>
+      </div>
+      <p class="sub">まかないサウナ（無料入浴）</p>
+      <ul>
+        <li>営業時間中であれば無料で入浴可能（女性スタッフはレディースデーのみ）</li>
+        <li>混雑時（在館数20人超）は自粛する</li>
+        <li>タオルレンタルは従業員割100円（現金のみ）</li>
+        <li>ロッカーは使わず、一番上の段（サウナマットの棚）を使用。貴重品は自己管理</li>
+        <li>館内ではお客様を優先する</li>
+      </ul>
+      <p class="sub" style="margin-top:16px">社割</p>
+      <ul>
+        <li>店頭の販売ドリンク・グッズは従業員価格で購入可能</li>
+        <li>支払いは現金のみ</li>
+        <li>割引率は店内掲示の別紙を参照</li>
+      </ul>
+    </section>
+
+    <section class="card" id="uniform">
+      <div class="card-head">
+        <span class="icon">
+          <svg viewBox="0 0 24 24"><path d="M9 4 6 7v3h2v10h8V10h2V7l-3-3-2 2-2-2Z"/></svg>
+        </span>
+        <div>
+          <span class="eyebrow">貸与</span>
+          <h3>制服の貸し出し</h3>
+        </div>
+      </div>
+      <p>パーカー・Tシャツ・アウフグースTシャツを制服として貸し出しています。</p>
+      <ul>
+        <li>借りる際は「ユニフォーム付与管理表」にサイズと枚数を報告する</li>
+        <li>自分のものと分かるよう、タグに小さく名前を記載する</li>
+      </ul>
+      <div class="note">
+        <span class="note-label">返却について</span>
+        サウナ・Playいずれも、貸与物の返却がない場合は最終給与から制服代相当額を控除します（金額は貸与物により異なります）。
+      </div>
+      <div class="ask-staff">
+        <svg viewBox="0 0 24 24"><path d="M8.5 9a3.5 3.5 0 1 1 5.5 2.9c-.9.6-1.5 1.3-1.5 2.4"/><circle cx="12" cy="17.2" r=".4" fill="currentColor"/><circle cx="12" cy="12" r="10"/></svg>
+        サイズ・在庫など詳細は <b>社員</b> に確認してください。
+      </div>
+    </section>
+
+    <section class="card" id="shift">
+      <div class="card-head">
+        <span class="icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
+        </span>
+        <div>
+          <span class="eyebrow">シフト</span>
+          <h3>シフト提出のルール</h3>
+        </div>
+      </div>
+      <div class="rule-pair">
+        <div class="slot">
+          <div class="label">月1日 正午まで</div>
+          <div class="value">16日〜月末分を提出</div>
+        </div>
+        <div class="slot">
+          <div class="label">月16日 正午まで</div>
+          <div class="value">翌月1〜15日分を提出</div>
+        </div>
+        <div class="example">どちらも、1日余裕を持って締切前日までに出すのが基本です。</div>
+      </div>
+      <div class="note">
+        <span class="note-label">締切に自信がない人は</span>
+        シフトボードの通知をオンにしておいてください。締切前日時点で未提出の場合、リマインドすることがあります。締切を過ぎるとシフトが通らない可能性があるのでご注意を。
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    NiHITARU サウナスタッフ向け・入社時案内 ／ 内容は随時更新されます
+  </footer>
+
+</div>
+</body>
+</html>
