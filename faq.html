@@ -75,6 +75,7 @@
   .a th, .a td { text-align: left; padding: 6px 4px; border-top: 1px solid var(--border); vertical-align: top; }
   .a th { color: var(--text-muted); font-weight: 500; }
   .btn { display: inline-block; margin-top: 4px; background: var(--accent); color: #fff; text-decoration: none; font-weight: 700; font-size: 14px; border-radius: 10px; padding: 9px 14px; }
+  .a .btnlink { display: inline-block; margin-top: 4px; background: var(--accent); color: #fff; text-decoration: none; font-weight: 700; font-size: 14px; border-radius: 10px; padding: 9px 14px; }
   .foot { margin-top: 32px; padding: 14px 16px; border-radius: 14px; background: var(--accent-soft); color: var(--accent-ink); font-size: 14px; }
 </style>
 </head>
@@ -97,6 +98,7 @@
     <a href="#procedure">手続き</a>
   </nav>
 
+  <div id="faqRoot">
   <h2 id="money">給与・手当</h2>
   <div class="list">
     <details>
@@ -228,7 +230,49 @@
     </details>
   </div>
 
+  </div>
   <div class="foot">ここにない質問は、このLINEのトークでそのまま送ってください。担当者が返信します。</div>
 </main>
+
+<script>
+  // 管理画面で編集したFAQを読み込んで表示する（読めなかったときは上の固定の内容のまま）
+  const FAQ_URL = 'https://script.google.com/macros/s/AKfycbwaHRM41Bs7vqCLCFt6pIJgkFvKcHUldWK-5g15ucQpWeVJToTg_FTvXhW7Y8yV71yR4w/exec?action=faq';
+  const CATS = [['給与・手当', 'money'], ['打刻・申請', 'timecard'], ['シフト・連絡', 'shift'], ['サウナ', 'sauna'], ['手続き', 'procedure']];
+  const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  function renderAnswer(text) {
+    const inline = (s) => esc(s)
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (m, t, u) => /^(https?:\/\/|[\w.-]+\.html)/.test(u) ? `<a class="btnlink" href="${u}">${t}</a>` : m);
+    const lines = String(text || '').split(/\r?\n/);
+    let html = '', mode = null;
+    const close = () => { if (mode) html += { ul: '</ul>', ol: '</ol>', table: '</table>' }[mode]; mode = null; };
+    const open = (m) => { if (mode !== m) { close(); html += { ul: '<ul>', ol: '<ol>', table: '<table>' }[m]; mode = m; } };
+    for (const raw of lines) {
+      const line = raw.trim();
+      if (!line) { close(); continue; }
+      if (/^・/.test(line)) { open('ul'); html += `<li>${inline(line.slice(1).trim())}</li>`; }
+      else if (/^\d+[.．]\s*/.test(line)) { open('ol'); html += `<li>${inline(line.replace(/^\d+[.．]\s*/, ''))}</li>`; }
+      else if (line.includes('｜')) { open('table'); const c = line.split('｜'); html += `<tr><th>${inline(c[0])}</th>${c.slice(1).map((x) => `<td>${inline(x)}</td>`).join('')}</tr>`; }
+      else { close(); html += `<p>${inline(line)}</p>`; }
+    }
+    close();
+    return html;
+  }
+  fetch(FAQ_URL).then((r) => r.json()).then((d) => {
+    if (!d.ok || !d.items || !d.items.length) return;
+    let html = '';
+    const used = new Set();
+    for (const [cat, id] of CATS) {
+      const items = d.items.filter((it) => it.category === cat);
+      if (!items.length) continue;
+      used.add(id);
+      html += `<h2 id="${id}">${esc(cat)}</h2><div class="list">` + items.map((it) => `
+        <details><summary>${esc(it.question)}${it.sauna ? '<span class="tag">サウナ</span>' : ''}</summary>
+        <div class="a">${renderAnswer(it.answer)}</div></details>`).join('') + '</div>';
+    }
+    document.getElementById('faqRoot').innerHTML = html;
+    document.querySelectorAll('nav.jump a').forEach((a) => { a.hidden = !used.has(a.getAttribute('href').slice(1)); });
+  }).catch(() => {});
+</script>
 </body>
 </html>
