@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>よくある質問</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<!-- NiHITARU 事務スタッフLINE：リッチメニュー「よくある質問」から開くページ（サウナ・Play共通）。
+     公開ページなので、社外に出せない内容は載せない。内容は clients/NiHITARU.md の「FAQ」を正とする。 -->
+<style>
+  :root {
+    --bg: #ffffff; --surface: #f6f6f4; --surface-raised: #ffffff;
+    --text: #222221; --text-muted: #6c6c68;
+    --accent: #37524a; --accent-ink: #2a3f39; --accent-soft: #e4ebe8;
+    --border: #e1e0da; --tag: #8a5a2b; --tag-soft: #f3e9dd;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1b1d1c; --surface: #222423; --surface-raised: #282b29;
+      --text: #ece9e2; --text-muted: #9c9c96;
+      --accent: #8fb3a4; --accent-ink: #c7ded3; --accent-soft: #2b3734;
+      --border: #3a3d3a; --tag: #d8a773; --tag-soft: #3a3024;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1b1d1c; --surface: #222423; --surface-raised: #282b29;
+    --text: #ece9e2; --text-muted: #9c9c96;
+    --accent: #8fb3a4; --accent-ink: #c7ded3; --accent-soft: #2b3734;
+    --border: #3a3d3a; --tag: #d8a773; --tag-soft: #3a3024;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: "Zen Kaku Gothic New", "Hiragino Sans", sans-serif;
+    -webkit-font-smoothing: antialiased; line-height: 1.75;
+    padding-bottom: calc(48px + env(safe-area-inset-bottom, 0px));
+  }
+  h1, h2 { font-family: "Zen Maru Gothic", "Zen Kaku Gothic New", sans-serif; text-wrap: balance; }
+  header.top { border-bottom: 1px solid var(--border); padding-top: env(safe-area-inset-top, 0px); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 14px 16px; display: flex; align-items: baseline; gap: 10px; }
+  .kicker { font-family: "Zen Maru Gothic", sans-serif; font-weight: 900; font-size: 13px; letter-spacing: 0.08em; color: var(--accent); }
+  .top-inner h1 { margin: 0; font-size: 17px; }
+  .wrap { max-width: 640px; margin: 0 auto; padding: 16px 16px 0; }
+  .lead { font-size: 14px; color: var(--text-muted); margin: 4px 0 8px; }
+
+  nav.jump { display: flex; gap: 8px; overflow-x: auto; padding: 6px 0 4px; scrollbar-width: none; }
+  nav.jump::-webkit-scrollbar { display: none; }
+  nav.jump a { flex: none; font-size: 13px; font-weight: 500; color: var(--accent-ink); background: var(--accent-soft); padding: 6px 13px; border-radius: 999px; text-decoration: none; }
+
+  h2 { font-size: 17px; margin: 28px 0 10px; scroll-margin-top: 12px; }
+  .list { display: flex; flex-direction: column; gap: 8px; }
+  details { border: 1px solid var(--border); border-radius: 14px; background: var(--surface); }
+  summary {
+    list-style: none; cursor: pointer; padding: 13px 44px 13px 16px; position: relative;
+    font-weight: 700; font-size: 15px; line-height: 1.55;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: "Q"; color: var(--accent); font-family: "Zen Maru Gothic", sans-serif; font-weight: 900; margin-right: 8px; }
+  summary::after {
+    content: ""; position: absolute; right: 18px; top: 50%; width: 9px; height: 9px;
+    border-right: 2px solid var(--text-muted); border-bottom: 2px solid var(--text-muted);
+    transform: translateY(-70%) rotate(45deg); transition: transform .15s;
+  }
+  details[open] summary::after { transform: translateY(-30%) rotate(-135deg); }
+  .tag { display: inline-block; font-size: 11px; font-weight: 700; color: var(--tag); background: var(--tag-soft); border-radius: 999px; padding: 1px 8px; margin-left: 6px; vertical-align: 2px; }
+  .a { padding: 0 16px 14px; font-size: 14px; }
+  .a p { margin: 0 0 8px; }
+  .a p:last-child, .a ul:last-child, .a ol:last-child { margin-bottom: 0; }
+  .a ul, .a ol { margin: 0 0 8px; padding-left: 1.3em; }
+  .a li { margin-bottom: 3px; }
+  .a table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 2px 0 8px; }
+  .a th, .a td { text-align: left; padding: 6px 4px; border-top: 1px solid var(--border); vertical-align: top; }
+  .a th { color: var(--text-muted); font-weight: 500; }
+  .btn { display: inline-block; margin-top: 4px; background: var(--accent); color: #fff; text-decoration: none; font-weight: 700; font-size: 14px; border-radius: 10px; padding: 9px 14px; }
+  .foot { margin-top: 32px; padding: 14px 16px; border-radius: 14px; background: var(--accent-soft); color: var(--accent-ink); font-size: 14px; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <span class="kicker">NiHITARU</span>
+    <h1>よくある質問</h1>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="lead">サウナ・Play共通です。「サウナ」の印があるものはサウナスタッフ向けです。タップすると答えが開きます。</p>
+  <nav class="jump">
+    <a href="#money">給与・手当</a>
+    <a href="#timecard">打刻・申請</a>
+    <a href="#shift">シフト・連絡</a>
+    <a href="#sauna">サウナ</a>
+    <a href="#procedure">手続き</a>
+  </nav>
+
+  <h2 id="money">給与・手当</h2>
+  <div class="list">
+    <details>
+      <summary>給料日はいつ？</summary>
+      <div class="a"><p>毎月末締め、<strong>翌月20日</strong>払いです。20日が土日祝のときは、<strong>その前の平日</strong>に支払います。</p></div>
+    </details>
+    <details>
+      <summary>給与明細はどこで見られる？</summary>
+      <div class="a"><p>Web明細「オフィスステーション」で、スマホ・パソコン・タブレットから見られます。過去の分も見られます。</p></div>
+    </details>
+    <details>
+      <summary>Web明細はどうやって始める？</summary>
+      <div class="a">
+        <ol>
+          <li>登録したメールアドレスに、オフィスステーションから案内メールが届きます。</li>
+          <li>メールに書かれたIDと初期パスワードでログインします。</li>
+          <li>ログインしたら、パスワードを自分のものに変更してください。</li>
+        </ol>
+        <p>メールアドレスはログイン後に変更できます。ログインIDは変更できません。</p>
+      </div>
+    </details>
+    <details>
+      <summary>Web明細の案内メールが届かない</summary>
+      <div class="a"><p>迷惑メールのフォルダや、受信設定を確認してください。それでも届かないときは、このLINEのトークで連絡してください。</p></div>
+    </details>
+    <details>
+      <summary>どんな手当がある？<span class="tag">サウナ</span></summary>
+      <div class="a">
+        <table>
+          <tr><th>早朝手当</th><td>6:00〜9:30の間に勤務したとき、15分ごとに50円</td></tr>
+          <tr><th>Stay清掃手当</th><td>Stay清掃を30分以上したとき、人数に応じて。時間管理票に名前がないと出ません</td></tr>
+          <tr><th>アウフグース手当</th><td>1回150円</td></tr>
+        </table>
+      </div>
+    </details>
+  </div>
+
+  <h2 id="timecard">打刻・申請</h2>
+  <div class="list">
+    <details>
+      <summary>何分ずれたら申請が必要？</summary>
+      <div class="a">
+        <table>
+          <tr><th></th><td><strong>出勤</strong></td><td><strong>退勤</strong></td></tr>
+          <tr><th>日直担当</th><td>開始10分前より早い</td><td>終了20分後より遅い</td></tr>
+          <tr><th>日直担当以外</th><td>開始5分前より早い</td><td>終了10分後より遅い</td></tr>
+        </table>
+        <p>例：シフト17:00〜23:00（日直以外）なら、16:55より前に出勤、または23:10より後に退勤したときに申請が必要です。遅刻したとき、打刻を忘れた・間違えたときも申請してください。</p>
+      </div>
+    </details>
+    <details>
+      <summary>打刻を忘れた・間違えたときは？</summary>
+      <div class="a">
+        <p>メニューの「打刻修正」から申請してください。できるだけ<strong>その日のうちに</strong>お願いします。</p>
+        <a class="btn" href="dakoku.html">申請のしかたを見る</a>
+      </div>
+    </details>
+    <details>
+      <summary>申請を忘れたらどうなる？</summary>
+      <div class="a">
+        <p><strong>月末までに申請がない場合</strong>、残業や早出の分は打刻の時間ではなく、<strong>シフトの時間</strong>で計算します。</p>
+        <p>遅刻は、申請がなくても打刻の時間を出勤時間として扱います。</p>
+      </div>
+    </details>
+    <details>
+      <summary>申請のことでわからないときは？</summary>
+      <div class="a"><p>菊池まで問い合わせてください。このLINEのトークで連絡しても大丈夫です。</p></div>
+    </details>
+  </div>
+
+  <h2 id="shift">シフト・連絡</h2>
+  <div class="list">
+    <details>
+      <summary>シフトの提出締切は？</summary>
+      <div class="a">
+        <table>
+          <tr><th>16日〜月末分</th><td>毎月1日の正午まで</td></tr>
+          <tr><th>翌月1日〜15日分</th><td>毎月16日の正午まで</td></tr>
+        </table>
+        <p>どちらも、1日余裕を持って締切の前日までに出すのが基本です。締切を過ぎるとシフトが通らないことがあります。</p>
+      </div>
+    </details>
+    <details>
+      <summary>決まったシフトを変えたいときは？</summary>
+      <div class="a"><p>岩本さんか水上さんに確認してください。</p></div>
+    </details>
+    <details>
+      <summary>遅刻・欠勤しそうなときは？</summary>
+      <div class="a">
+        <p>わかった時点ですぐに、グループLINEなどで連絡してください。</p>
+        <table>
+          <tr><th>サウナ</th><td>水上さんか岩本さん</td></tr>
+          <tr><th>Play</th><td>水上さんか橋下さん</td></tr>
+        </table>
+      </div>
+    </details>
+  </div>
+
+  <h2 id="sauna">サウナ</h2>
+  <div class="list">
+    <details>
+      <summary>勤務の前後にサウナに入っていい？<span class="tag">サウナ</span></summary>
+      <div class="a">
+        <ul>
+          <li>営業時間中なら無料で入れます（女性スタッフはレディースデーのみ）。</li>
+          <li>在館数が20人を超える混雑時は控えてください。</li>
+          <li>タオルレンタルは従業員割で100円（現金のみ）です。</li>
+          <li>ロッカーは使わず、一番上の段（サウナマットの棚）を使ってください。貴重品は自分で管理してください。</li>
+          <li>館内ではお客様を優先してください。</li>
+        </ul>
+      </div>
+    </details>
+    <details>
+      <summary>制服を借りたい・サイズを変えたい<span class="tag">サウナ</span></summary>
+      <div class="a"><p>「ユニフォーム付与管理表」にサイズと枚数を書いて、社員に声をかけてください。自分のものとわかるよう、タグに小さく名前を書いてください。</p></div>
+    </details>
+  </div>
+
+  <h2 id="procedure">手続き</h2>
+  <div class="list">
+    <details>
+      <summary>住所・口座・電話番号が変わったら？</summary>
+      <div class="a"><p>このLINEのトークで連絡してください。</p></div>
+    </details>
+    <details>
+      <summary>辞めたいときは？</summary>
+      <div class="a">
+        <ul>
+          <li>退職願は、基本的に<strong>45日前まで</strong>に出してください。必要な引き継ぎも済ませてください。</li>
+          <li>制服などの貸与物は、退職後2週間以内に返却してください。返却がない場合は、最終給与から制服代相当額を差し引きます。</li>
+          <li>使っていないスパ施設チケットがあれば返却してください。</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <div class="foot">ここにない質問は、このLINEのトークでそのまま送ってください。担当者が返信します。</div>
+</main>
+</body>
+</html>
