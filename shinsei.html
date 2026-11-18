@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>残業・遅刻・打刻修正申請</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --surface: #f6f6f4;
+    --surface-raised: #ffffff;
+    --text: #222221;
+    --text-muted: #6c6c68;
+    --accent: #37524a;
+    --accent-ink: #2a3f39;
+    --accent-soft: #e4ebe8;
+    --border: #e1e0da;
+    --warn: #8a5a2b;
+    --warn-soft: #f3e9dd;
+    --danger: #a3432f;
+    --focus: rgba(55,82,74,0.32);
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1b1d1c;
+      --surface: #222423;
+      --surface-raised: #282b29;
+      --text: #ece9e2;
+      --text-muted: #9c9c96;
+      --accent: #8fb3a4;
+      --accent-ink: #c7ded3;
+      --accent-soft: #2b3734;
+      --border: #3a3d3a;
+      --warn: #d8a773;
+      --warn-soft: #3a3024;
+      --danger: #d08a76;
+      --focus: rgba(143,179,164,0.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1b1d1c;
+    --surface: #222423;
+    --surface-raised: #282b29;
+    --text: #ece9e2;
+    --text-muted: #9c9c96;
+    --accent: #8fb3a4;
+    --accent-ink: #c7ded3;
+    --accent-soft: #2b3734;
+    --border: #3a3d3a;
+    --warn: #d8a773;
+    --warn-soft: #3a3024;
+    --danger: #d08a76;
+    --focus: rgba(143,179,164,0.35);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Zen Kaku Gothic New", "Hiragino Sans", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px));
+  }
+  h1, h2, h3 { font-family: "Zen Maru Gothic", "Zen Kaku Gothic New", sans-serif; text-wrap: balance; }
+
+  header.top {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 20;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+  .top-inner {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 14px 20px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .top-inner .kicker {
+    font-family: "Zen Maru Gothic", sans-serif;
+    font-weight: 900;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+  }
+  .top-inner h1 { margin: 0; font-size: 17px; font-weight: 700; }
+
+  .wrap { max-width: 640px; margin: 0 auto; padding: 20px; }
+
+  .concept-note {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    background: var(--accent-soft);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 13px;
+    color: var(--text);
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+  .concept-note svg { flex: none; margin-top: 2px; color: var(--accent); }
+  .concept-note strong { color: var(--accent-ink); }
+
+  .intro { margin-bottom: 22px; }
+  .intro h2 { font-size: 21px; margin: 0 0 6px; }
+  .intro p { margin: 0; color: var(--text-muted); font-size: 14px; line-height: 1.7; }
+
+  form { display: flex; flex-direction: column; gap: 18px; }
+
+  fieldset {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--surface-raised);
+    padding: 18px 18px 20px;
+    margin: 0;
+  }
+  legend {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+    padding: 0 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  legend .req { color: var(--danger); font-weight: 700; }
+
+  .field { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+  .field:first-of-type { margin-top: 0; }
+  label.flabel { font-size: 13px; font-weight: 700; color: var(--text); display: flex; gap: 6px; align-items: center; }
+  label.flabel .req { color: var(--danger); font-size: 12px; }
+  .hint { font-size: 12px; color: var(--text-muted); margin-top: -2px; }
+
+  input[type="text"], input[type="date"], input[type="time"], textarea {
+    width: 100%;
+    font: inherit;
+    font-size: 15px;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 11px 13px;
+    font-variant-numeric: tabular-nums;
+  }
+  textarea { resize: vertical; min-height: 72px; line-height: 1.6; }
+  input:focus-visible, textarea:focus-visible, .chip input:focus-visible + span {
+    outline: 2px solid var(--focus);
+    outline-offset: 1px;
+  }
+
+  .chiprow { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    position: relative;
+  }
+  .chip input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; cursor: pointer; margin: 0; }
+  .chip span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-size: 14px;
+    color: var(--text);
+    transition: background .12s, border-color .12s, color .12s;
+  }
+  .chip input:checked + span {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  .kindcard-row { display: flex; flex-direction: column; gap: 10px; }
+  .kindcard { position: relative; }
+  .kindcard input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; cursor: pointer; margin: 0; }
+  .kindcard .box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 13px 14px;
+    background: var(--surface);
+  }
+  .kindcard .box .ic {
+    flex: none;
+    width: 34px; height: 34px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent-ink);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .kindcard .box .tt { font-size: 14.5px; font-weight: 700; }
+  .kindcard .box .dd { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .kindcard input:checked + .box {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    box-shadow: inset 0 0 0 1px var(--accent);
+  }
+
+  .dt-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .dt-block { border: 1px solid var(--border); border-radius: 10px; padding: 12px; background: var(--surface); }
+  .dt-block .dt-title { font-size: 12px; color: var(--text-muted); font-weight: 700; margin-bottom: 8px; }
+  .dt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  .addtime-btn {
+    align-self: flex-start;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent-ink);
+    background: none;
+    border: none;
+    padding: 2px 0;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .addtime-btn svg { width: 14px; height: 14px; }
+
+  .conditional {
+    display: none;
+    flex-direction: column;
+    gap: 14px;
+    border-top: 1px dashed var(--border);
+    margin-top: 16px;
+    padding-top: 16px;
+  }
+  .conditional.show { display: flex; }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: var(--warn-soft);
+    color: var(--warn);
+    width: fit-content;
+  }
+
+  .approver-list { display: flex; flex-direction: column; gap: 8px; }
+  .approver { position: relative; }
+  .approver input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; cursor: pointer; margin: 0; }
+  .approver .row {
+    display: flex; align-items: center; justify-content: space-between;
+    border: 1px solid var(--border); border-radius: 10px; padding: 11px 14px; background: var(--surface);
+    font-size: 14.5px;
+  }
+  .approver .row .dot {
+    width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--border); flex: none;
+  }
+  .approver input:checked + .row { border-color: var(--accent); background: var(--accent-soft); }
+  .approver input:checked + .row .dot { border-color: var(--accent); background: var(--accent); box-shadow: inset 0 0 0 3px var(--surface-raised); }
+
+  .submit-bar {
+    position: sticky;
+    bottom: 0;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: linear-gradient(to top, var(--bg) 60%, transparent);
+    padding-top: 18px;
+    margin-top: 4px;
+  }
+  button.submit {
+    width: 100%;
+    font: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    background: var(--accent);
+    border: none;
+    border-radius: 12px;
+    padding: 15px;
+    cursor: pointer;
+    transition: opacity .12s;
+  }
+  button.submit:hover { opacity: 0.92; }
+  button.submit:active { opacity: 0.85; }
+
+  /* review sheet */
+  .sheet-overlay {
+    position: fixed; inset: 0; background: rgba(20,20,18,0.42);
+    display: none; align-items: flex-end; justify-content: center; z-index: 50;
+  }
+  .sheet-overlay.show { display: flex; }
+  .sheet {
+    width: 100%; max-width: 640px;
+    background: var(--surface-raised);
+    border-radius: 18px 18px 0 0;
+    padding: 22px 20px calc(22px + env(safe-area-inset-bottom, 0px));
+    max-height: 82vh;
+    overflow-y: auto;
+  }
+  .sheet h3 { margin: 0 0 4px; font-size: 18px; }
+  .sheet .sub { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
+  .review-row { display: flex; justify-content: space-between; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+  .review-row:last-of-type { border-bottom: none; }
+  .review-row .k { color: var(--text-muted); flex: none; width: 128px; }
+  .review-row .v { text-align: right; font-weight: 500; }
+  .sheet-actions { display: flex; gap: 10px; margin-top: 18px; }
+  .sheet-actions button { flex: 1; font: inherit; font-size: 14.5px; font-weight: 700; padding: 12px; border-radius: 10px; cursor: pointer; }
+  .sheet-actions .back { background: var(--surface); border: 1px solid var(--border); color: var(--text); }
+  .sheet-actions .go { background: var(--accent); border: none; color: #fff; }
+
+  .success-overlay {
+    position: fixed; inset: 0; background: var(--bg);
+    display: none; align-items: center; justify-content: center; z-index: 60;
+    padding: 24px;
+    text-align: center;
+  }
+  .success-overlay.show { display: flex; flex-direction: column; }
+  .success-overlay .ic { color: var(--accent); margin-bottom: 14px; }
+  .success-overlay h3 { font-size: 19px; margin: 0 0 8px; }
+  .success-overlay p { font-size: 13.5px; color: var(--text-muted); max-width: 320px; margin: 0 auto 22px; line-height: 1.7; }
+  .success-overlay button { font: inherit; font-size: 14px; font-weight: 700; color: var(--accent-ink); background: var(--accent-soft); border: none; border-radius: 10px; padding: 11px 18px; cursor: pointer; }
+
+  /* ── 本番版で追加 ── */
+  .tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 4px; margin-bottom: 22px; }
+  .tabs button { font: inherit; font-size: 14px; font-weight: 700; border: none; border-radius: 9px; padding: 10px 8px; background: transparent; color: var(--text-muted); cursor: pointer; }
+  .tabs button[aria-selected="true"] { background: var(--surface-raised); color: var(--accent-ink); box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+  .notice { border-radius: 12px; padding: 12px 14px; font-size: 13.5px; line-height: 1.7; margin-bottom: 18px; border: 1px solid var(--border); }
+  .notice.error { background: var(--warn-soft); color: var(--warn); }
+  .history-list { display: flex; flex-direction: column; gap: 12px; }
+  .hcard { border: 1px solid var(--border); border-radius: 14px; background: var(--surface-raised); padding: 14px 16px; }
+  .hcard .head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .hcard .kind { font-weight: 700; font-size: 15px; }
+  .badge { font-size: 12px; font-weight: 700; border-radius: 999px; padding: 3px 10px; white-space: nowrap; }
+  .badge.wait { background: var(--warn-soft); color: var(--warn); }
+  .badge.done { background: var(--accent-soft); color: var(--accent-ink); }
+  .hcard dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: 13px; }
+  .hcard dt { color: var(--text-muted); }
+  .hcard dd { margin: 0; overflow-wrap: anywhere; }
+  .empty { text-align: center; color: var(--text-muted); font-size: 14px; padding: 32px 8px; line-height: 1.8; }
+  .sheet-actions .go[disabled] { opacity: 0.55; cursor: wait; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <span class="kicker">NiHITARU</span>
+    <h1>残業・遅刻・打刻修正申請</h1>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="notice error" id="liffError" hidden></div>
+
+  <div class="tabs" role="tablist">
+    <button type="button" role="tab" id="tabApply" aria-selected="true">申請する</button>
+    <button type="button" role="tab" id="tabHistory" aria-selected="false">自分の申請履歴</button>
+  </div>
+
+  <section id="viewApply">
+
+  <div class="intro">
+    <h2>出勤日ごとに1件、入力してください。</h2>
+    <p>残業・遅刻の連絡や、打刻の修正依頼をこの画面からまとめて送れます。</p>
+  </div>
+
+  <form id="applyForm">
+
+    <fieldset>
+      <legend>店舗<span class="req">必須</span></legend>
+      <div class="chiprow" role="radiogroup" aria-label="店舗">
+        <label class="chip"><input type="radio" name="shop" value="NiHITARU" checked><span>NiHITARU</span></label>
+        <label class="chip"><input type="radio" name="shop" value="NiHITARU Play"><span>NiHITARU Play</span></label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>申請者<span class="req">必須</span></legend>
+      <div class="dt-grid">
+        <div class="field">
+          <label class="flabel" for="familyName">氏（漢字）</label>
+          <input type="text" id="familyName" name="familyName" placeholder="例：山田" autocomplete="family-name">
+        </div>
+        <div class="field">
+          <label class="flabel" for="givenName">名（漢字）</label>
+          <input type="text" id="givenName" name="givenName" placeholder="例：太郎" autocomplete="given-name">
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>申請区分<span class="req">必須</span></legend>
+      <div class="kindcard-row" role="radiogroup" aria-label="申請区分">
+        <label class="kindcard">
+          <input type="radio" name="kind" value="残業申請">
+          <span class="box">
+            <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 3"></path></svg></span>
+            <span><span class="tt">残業申請</span><br><span class="dd">予定より遅く退勤した／する場合</span></span>
+          </span>
+        </label>
+        <label class="kindcard">
+          <input type="radio" name="kind" value="遅刻連絡">
+          <span class="box">
+            <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v3"></path><circle cx="12" cy="13" r="8"></circle><path d="M12 9v4l2.5 1.5"></path></svg></span>
+            <span><span class="tt">遅刻連絡</span><br><span class="dd">出勤が予定時刻より遅れた場合</span></span>
+          </span>
+        </label>
+        <label class="kindcard">
+          <input type="radio" name="kind" value="打刻漏れ・修正の依頼">
+          <span class="box">
+            <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="5" width="16" height="15" rx="2"></rect><path d="M9 3v4M15 3v4M4 10h16"></path><path d="m9.5 15 1.8 1.8L14.5 13.6"></path></svg></span>
+            <span><span class="tt">打刻漏れ・修正の依頼</span><br><span class="dd">打刻を忘れた／間違えた場合</span></span>
+          </span>
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>シフトと実際の時刻<span class="req">必須</span></legend>
+      <div class="hint">出勤・退勤・休憩のうち、ずれたもの1つについて「元々のシフト」と「実際の時刻」を入力してください。</div>
+      <div class="field" style="margin-top:10px;">
+        <label class="flabel">元々のシフト日時（出勤or退勤or休憩）</label>
+        <div class="dt-grid">
+          <input type="date" id="origDate" name="origDate" aria-label="元々の日付">
+          <input type="time" id="origTime" name="origTime" aria-label="元々の時刻">
+        </div>
+      </div>
+      <div class="field" style="margin-top:10px;">
+        <label class="flabel">実際の出勤or退勤or休憩時間</label>
+        <div class="dt-grid">
+          <input type="date" id="actualDate" name="actualDate" aria-label="実際の日付">
+          <input type="time" id="actualTime" name="actualTime" aria-label="実際の時刻">
+        </div>
+      </div>
+
+      <button type="button" class="addtime-btn" id="addPair2Btn" style="margin-top:10px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+        もう1組追加する（休憩の入り・戻りなど）
+      </button>
+
+      <div id="pair2Block" style="display:none;">
+        <div class="field" style="margin-top:10px;">
+          <label class="flabel">元々のシフト日時②</label>
+          <div class="dt-grid">
+            <input type="date" id="orig2Date" name="orig2Date" aria-label="元々の日付②">
+            <input type="time" id="orig2Time" name="orig2Time" aria-label="元々の時刻②">
+          </div>
+        </div>
+        <div class="field" style="margin-top:10px;">
+          <label class="flabel">実際の時間②</label>
+          <div class="dt-grid">
+            <input type="date" id="actual2Date" name="actual2Date" aria-label="実際の日付②">
+            <input type="time" id="actual2Time" name="actual2Time" aria-label="実際の時刻②">
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>申請理由<span class="req">必須</span></legend>
+      <div class="field">
+        <textarea id="reason" name="reason" placeholder="例：バスで寝過ごしてしまい、到着が遅れました。"></textarea>
+      </div>
+    </fieldset>
+
+    <fieldset id="conditionalFieldset" style="display:none;">
+      <legend>追加の確認事項</legend>
+
+      <div class="conditional" id="advanceBlock">
+        <div class="tag" id="advanceTag">残業申請・遅刻連絡の場合</div>
+        <div class="field">
+          <label class="flabel" for="advance">事前連絡の有無<span class="req">必須</span></label>
+          <div class="chiprow" role="radiogroup" aria-label="事前連絡の有無">
+            <label class="chip"><input type="radio" name="advance" value="有"><span>有</span></label>
+            <label class="chip"><input type="radio" name="advance" value="無"><span>無</span></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="conditional" id="improveBlock">
+        <div class="tag">遅刻連絡の場合のみ</div>
+        <div class="field">
+          <label class="flabel" for="improve">改善策</label>
+          <input type="text" id="improve" name="improve" placeholder="例：前日に目覚ましを2つ設定する">
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>承認者<span class="req">必須</span></legend>
+      <div class="approver-list" role="radiogroup" aria-label="承認者">
+        <label class="approver"><input type="radio" name="approver" value="水上瞳"><span class="row"><span>水上瞳</span><span class="dot"></span></span></label>
+        <label class="approver"><input type="radio" name="approver" value="岩本 裕太郎"><span class="row"><span>岩本裕太郎</span><span class="dot"></span></span></label>
+        <label class="approver"><input type="radio" name="approver" value="橋下航"><span class="row"><span>橋下航</span><span class="dot"></span></span></label>
+        <label class="approver"><input type="radio" name="approver" value="承認者なし"><span class="row"><span>承認者なし</span><span class="dot"></span></span></label>
+      </div>
+    </fieldset>
+
+    <div class="submit-bar">
+      <button type="submit" class="submit">内容を確認して送信</button>
+    </div>
+  </form>
+  </section>
+
+  <section id="viewHistory" hidden>
+    <div class="intro">
+      <h2>自分の申請履歴</h2>
+      <p>このLINEから送った申請が新しい順に表示されます（最大30件）。「確認済み」になれば担当者が内容を確認しています。</p>
+    </div>
+    <div id="historyList" class="history-list"><div class="empty">読み込み中…</div></div>
+  </section>
+</div>
+
+<div class="sheet-overlay" id="reviewOverlay">
+  <div class="sheet">
+    <h3>この内容で送信しますか？</h3>
+    <div class="sub">送信前に、入力した内容をもう一度確認してください。</div>
+    <div id="reviewRows"></div>
+    <div class="sheet-actions">
+      <button type="button" class="back" id="reviewBack">戻って直す</button>
+      <button type="button" class="go" id="reviewGo">送信する</button>
+    </div>
+  </div>
+</div>
+
+<div class="success-overlay" id="successOverlay">
+  <div class="ic"><svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="m8 12 3 3 5-6"></path></svg></div>
+  <h3>申請を受け付けました</h3>
+  <p id="successMsg">LINEに申請内容の控えを送りました。確認状況は「自分の申請履歴」から見られます。</p>
+  <button type="button" id="restartBtn">続けて別の日を申請する</button>
+  <button type="button" id="toHistoryBtn" style="margin-top:10px;background:transparent;">申請履歴を見る</button>
+</div>
+
+<script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<script>
+  // ── 設定（LIFFアプリ作成・GASデプロイ後に差し替える） ──
+  const LIFF_ID = '2012675904-WZHdYxW8';
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycbwaHRM41Bs7vqCLCFt6pIJgkFvKcHUldWK-5g15ucQpWeVJToTg_FTvXhW7Y8yV71yR4w/exec';
+
+  const $ = (id) => document.getElementById(id);
+  const esc = (v) => String(v == null ? '' : v).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  // ── LIFF（LINEアプリ内で開いたときに本人確認） ──
+  let liffReady = false;
+  function showError(msg) {
+    const el = $('liffError');
+    el.textContent = msg;
+    el.hidden = !msg;
+  }
+  async function initLiff() {
+    if (typeof liff === 'undefined' || LIFF_ID.indexOf('REPLACE') === 0) {
+      showError('準備中のページです（LINE連携の設定がまだ完了していません）。');
+      return;
+    }
+    try {
+      await liff.init({ liffId: LIFF_ID });
+      if (!liff.isLoggedIn()) { liff.login({ redirectUri: location.href }); return; }
+      liffReady = true;
+      showError('');
+      if (new URLSearchParams(location.search).get('view') === 'history') switchView('history');
+    } catch (err) {
+      showError('LINEとの連携に失敗しました。LINEアプリのメニューから開き直してください。');
+      console.error(err);
+    }
+  }
+  async function callApi(action, data) {
+    if (!liffReady) throw new Error('LINEアプリのメニューから開き直してください。');
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // プリフライトを避けるため text/plain
+      body: JSON.stringify({ action, idToken: liff.getIDToken(), data }),
+    });
+    const json = await res.json();
+    if (!json.ok) throw new Error(json.error || '送信に失敗しました');
+    return json;
+  }
+
+  // ── タブ切り替え ──
+  function switchView(name) {
+    const isHistory = name === 'history';
+    $('viewApply').hidden = isHistory;
+    $('viewHistory').hidden = !isHistory;
+    $('tabApply').setAttribute('aria-selected', String(!isHistory));
+    $('tabHistory').setAttribute('aria-selected', String(isHistory));
+    if (isHistory) loadHistory();
+    window.scrollTo({ top: 0 });
+  }
+  $('tabApply').addEventListener('click', () => switchView('apply'));
+  $('tabHistory').addEventListener('click', () => switchView('history'));
+
+  async function loadHistory() {
+    const list = $('historyList');
+    list.innerHTML = '<div class="empty">読み込み中…</div>';
+    try {
+      const { items } = await callApi('history');
+      if (!items.length) {
+        list.innerHTML = '<div class="empty">まだ申請はありません。<br>（このページから送った申請だけが表示されます）</div>';
+        return;
+      }
+      list.innerHTML = items.map((it) => {
+        const badge = it.status === '確認済み'
+          ? `<span class="badge done">確認済み${it.airshift === '修正済' ? '・打刻修正済み' : ''}</span>`
+          : '<span class="badge wait">確認待ち</span>';
+        const rows = [
+          ['申請日時', it.submittedAt], ['店舗', it.shop],
+          ['元々のシフト', it.orig1], ['実際の時間', it.actual1],
+          ['元々のシフト②', it.orig2], ['実際の時間②', it.actual2],
+          ['理由', it.reason], ['承認者', it.approver],
+        ].filter(([, v]) => v);
+        return `<div class="hcard"><div class="head"><span class="kind">${esc(it.kind)}</span>${badge}</div>
+          <dl>${rows.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl></div>`;
+      }).join('');
+    } catch (err) {
+      list.innerHTML = `<div class="notice error">${esc(err.message)}</div>`;
+    }
+  }
+
+  // ── 入力フォーム ──
+  const kindInputs = document.querySelectorAll('input[name="kind"]');
+  const conditionalFieldset = $('conditionalFieldset');
+  const advanceBlock = $('advanceBlock');
+  const improveBlock = $('improveBlock');
+  const advanceTag = $('advanceTag');
+
+  function updateConditional() {
+    const kind = document.querySelector('input[name="kind"]:checked');
+    const v = kind ? kind.value : null;
+    const showAdvance = v === '残業申請' || v === '遅刻連絡';
+    const showImprove = v === '遅刻連絡';
+    advanceBlock.classList.toggle('show', showAdvance);
+    improveBlock.classList.toggle('show', showImprove);
+    conditionalFieldset.style.display = (showAdvance || showImprove) ? '' : 'none';
+    if (v === '残業申請') advanceTag.textContent = '残業申請の場合';
+    if (v === '遅刻連絡') advanceTag.textContent = '遅刻連絡の場合';
+  }
+  kindInputs.forEach((i) => i.addEventListener('change', updateConditional));
+
+  $('addPair2Btn').addEventListener('click', (e) => {
+    $('pair2Block').style.display = '';
+    e.currentTarget.style.display = 'none';
+  });
+
+  const form = $('applyForm');
+  const reviewOverlay = $('reviewOverlay');
+  const reviewRows = $('reviewRows');
+  const successOverlay = $('successOverlay');
+
+  function formData() {
+    const fd = new FormData(form);
+    const g = (k) => (fd.get(k) || '').trim();
+    const keys = ['shop', 'familyName', 'givenName', 'kind', 'origDate', 'origTime', 'actualDate', 'actualTime',
+      'orig2Date', 'orig2Time', 'actual2Date', 'actual2Time', 'reason', 'advance', 'improve', 'approver'];
+    const d = {};
+    keys.forEach((k) => { d[k] = g(k); });
+    if (d.kind === '打刻漏れ・修正の依頼') d.advance = '上記に該当しない（打刻修正）';
+    if (d.kind !== '遅刻連絡') d.improve = '';
+    return d;
+  }
+
+  function missingFields(d) {
+    const m = [];
+    if (!d.familyName || !d.givenName) m.push('氏・名');
+    if (!d.kind) m.push('申請区分');
+    if (!d.origDate || !d.origTime) m.push('元々のシフト日時');
+    if (!d.actualDate || !d.actualTime) m.push('実際の時間');
+    const p2 = [d.orig2Date, d.orig2Time, d.actual2Date, d.actual2Time];
+    if (p2.some(Boolean) && !p2.every(Boolean)) m.push('2組目の日時（すべて入力するか、すべて空に）');
+    if (!d.reason) m.push('申請理由');
+    if ((d.kind === '残業申請' || d.kind === '遅刻連絡') && !d.advance) m.push('事前連絡の有無');
+    if (!d.approver) m.push('承認者');
+    return m;
+  }
+
+  function reviewList(d) {
+    const dt = (a, b) => [a.replace(/-/g, '/'), b].filter(Boolean).join(' ');
+    return [
+      ['店舗', d.shop],
+      ['申請者', [d.familyName, d.givenName].filter(Boolean).join(' ')],
+      ['申請区分', d.kind],
+      ['元々のシフト日時', dt(d.origDate, d.origTime)],
+      ['実際の時間', dt(d.actualDate, d.actualTime)],
+      ['元々のシフト日時②', dt(d.orig2Date, d.orig2Time)],
+      ['実際の時間②', dt(d.actual2Date, d.actual2Time)],
+      ['申請理由', d.reason],
+      ['事前連絡の有無', d.advance],
+      ['改善策', d.improve],
+      ['承認者', d.approver],
+    ].filter(([, v]) => v);
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const d = formData();
+    const missing = missingFields(d);
+    if (missing.length) { alert('次の項目を入力してください：\n・' + missing.join('\n・')); return; }
+    reviewRows.innerHTML = reviewList(d).map(([k, v]) =>
+      `<div class="review-row"><span class="k">${esc(k)}</span><span class="v">${esc(v)}</span></div>`
+    ).join('');
+    reviewOverlay.classList.add('show');
+  });
+
+  $('reviewBack').addEventListener('click', () => reviewOverlay.classList.remove('show'));
+  $('reviewGo').addEventListener('click', async (e) => {
+    const btn = e.currentTarget;
+    btn.disabled = true;
+    btn.textContent = '送信中…';
+    try {
+      const res = await callApi('submit', formData());
+      $('successMsg').textContent = res.receiptSent
+        ? 'LINEに申請内容の控えを送りました。確認状況は「自分の申請履歴」から見られます。'
+        : '申請は受け付けましたが、LINEへの控えの送信に失敗しました。内容は「自分の申請履歴」で確認できます。';
+      reviewOverlay.classList.remove('show');
+      successOverlay.classList.add('show');
+    } catch (err) {
+      alert('送信できませんでした：' + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '送信する';
+    }
+  });
+
+  function resetForm() {
+    successOverlay.classList.remove('show');
+    form.reset();
+    updateConditional();
+    $('pair2Block').style.display = 'none';
+    $('addPair2Btn').style.display = '';
+  }
+  $('restartBtn').addEventListener('click', () => { resetForm(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+  $('toHistoryBtn').addEventListener('click', () => { resetForm(); switchView('history'); });
+
+  updateConditional();
+  initLiff();
+</script>
+
+</body>
+</html>

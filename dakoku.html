@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>打刻修正の申請方法</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<!-- NiHITARU 事務スタッフLINE：リッチメニュー「打刻修正」から開くページ。
+     「申請する」「自分の申請履歴」ボタンは LIFF の URL（https://liff.line.me/<LIFF_ID>）へ。
+     LIFF作成後、下の LIFF_URL を差し替える。 -->
+<style>
+  :root {
+    --bg: #ffffff; --surface: #f6f6f4; --surface-raised: #ffffff;
+    --text: #222221; --text-muted: #6c6c68;
+    --accent: #37524a; --accent-ink: #2a3f39; --accent-soft: #e4ebe8;
+    --border: #e1e0da; --warn: #8a5a2b; --warn-soft: #f3e9dd;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1b1d1c; --surface: #222423; --surface-raised: #282b29;
+      --text: #ece9e2; --text-muted: #9c9c96;
+      --accent: #8fb3a4; --accent-ink: #c7ded3; --accent-soft: #2b3734;
+      --border: #3a3d3a; --warn: #d8a773; --warn-soft: #3a3024;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1b1d1c; --surface: #222423; --surface-raised: #282b29;
+    --text: #ece9e2; --text-muted: #9c9c96;
+    --accent: #8fb3a4; --accent-ink: #c7ded3; --accent-soft: #2b3734;
+    --border: #3a3d3a; --warn: #d8a773; --warn-soft: #3a3024;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: "Zen Kaku Gothic New", "Hiragino Sans", sans-serif;
+    -webkit-font-smoothing: antialiased; line-height: 1.75;
+    padding-bottom: calc(48px + env(safe-area-inset-bottom, 0px));
+  }
+  h1, h2, h3 { font-family: "Zen Maru Gothic", "Zen Kaku Gothic New", sans-serif; text-wrap: balance; }
+  header.top { border-bottom: 1px solid var(--border); padding-top: env(safe-area-inset-top, 0px); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 14px 16px; display: flex; align-items: baseline; gap: 10px; }
+  .kicker { font-family: "Zen Maru Gothic", sans-serif; font-weight: 900; font-size: 13px; letter-spacing: 0.08em; color: var(--accent); }
+  .top-inner h1 { margin: 0; font-size: 17px; }
+  .wrap { max-width: 640px; margin: 0 auto; padding: 20px 16px; }
+  h2 { font-size: 19px; margin: 32px 0 10px; }
+  h2:first-child { margin-top: 4px; }
+  p { margin: 0 0 10px; font-size: 14.5px; }
+  .muted { color: var(--text-muted); font-size: 13px; }
+
+  .cta { display: flex; flex-direction: column; gap: 10px; margin: 18px 0 8px; }
+  .btn { display: block; text-align: center; text-decoration: none; font-weight: 700; font-size: 16px; border-radius: 12px; padding: 15px 16px; }
+  .btn.primary { background: var(--accent); color: #fff; }
+  .btn.secondary { background: var(--accent-soft); color: var(--accent-ink); font-size: 14.5px; padding: 12px 16px; }
+
+  .rule { border: 1px solid var(--border); border-radius: 14px; background: var(--surface); padding: 14px 16px; margin-bottom: 10px; }
+  .rule h3 { font-size: 15px; margin: 0 0 6px; }
+  .rule table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  .rule th, .rule td { text-align: left; padding: 6px 4px; border-top: 1px solid var(--border); vertical-align: top; }
+  .rule th { color: var(--text-muted); font-weight: 500; width: 40%; }
+  .rule .ex { font-size: 12.5px; color: var(--text-muted); margin: 8px 0 0; }
+
+  ol.steps { list-style: none; counter-reset: step; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 22px; }
+  ol.steps > li { counter-increment: step; position: relative; padding-left: 40px; }
+  ol.steps > li::before {
+    content: counter(step); position: absolute; left: 0; top: 0;
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--accent); color: #fff; font-weight: 700; font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  ol.steps h3 { font-size: 15.5px; margin: 1px 0 4px; }
+  ol.steps p { font-size: 14px; }
+  figure { margin: 10px 0 0; }
+  figure img { display: block; width: 100%; max-width: 360px; height: auto; border: 1px solid var(--border); border-radius: 12px; }
+  figcaption { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+
+  .note { background: var(--warn-soft); color: var(--warn); border-radius: 12px; padding: 12px 14px; font-size: 13.5px; margin-top: 10px; }
+  .note p { font-size: 13.5px; margin: 0; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <span class="kicker">NiHITARU</span>
+    <h1>打刻修正の申請方法</h1>
+  </div>
+</header>
+
+<main class="wrap">
+  <h2>こんなときは申請してください</h2>
+  <p>打刻がシフトから下の時間以上ずれたとき、打刻を忘れた・間違えたときは、<strong>その日のうちに</strong>申請してください。休憩の打刻がずれたときも同じです。</p>
+
+  <div class="rule">
+    <h3>サウナ（NiHITARU）</h3>
+    <table>
+      <tr><th></th><td><strong>出勤</strong></td><td><strong>退勤</strong></td></tr>
+      <tr><th>日直担当</th><td>開始10分前より早い</td><td>終了20分後より遅い</td></tr>
+      <tr><th>日直担当以外</th><td>開始5分前より早い</td><td>終了10分後より遅い</td></tr>
+    </table>
+    <p class="ex">例：シフト17:00〜23:00（日直以外）→ 16:55より前に出勤、23:10より後に退勤したら申請</p>
+  </div>
+  <div class="rule">
+    <h3>Play（NiHITARU Play）</h3>
+    <p style="font-size:13.5px;margin:0;">シフト開始より遅れて出勤したとき（遅刻）と、出勤・退勤の打刻を忘れたときに申請してください。</p>
+  </div>
+
+  <div class="cta">
+    <a class="btn primary" data-liff="" href="#">申請する</a>
+    <a class="btn secondary" data-liff="?view=history" href="#">自分の申請履歴を見る</a>
+  </div>
+
+  <h2>申請のしかた</h2>
+  <ol class="steps">
+    <li>
+      <h3>「申請する」を押す</h3>
+      <p>このページの「申請する」ボタンを押すと、LINEの中で申請画面が開きます。はじめて開くときだけ、LINEへのアクセスの許可を求められるので「許可する」を押してください。</p>
+    </li>
+    <li>
+      <h3>店舗とお名前を入れる</h3>
+      <p>お名前は「氏」と「名」に分けて、漢字で入力してください。</p>
+      <figure><img src="img/dakoku_step_name.png" alt="氏・名の入力例（山田 太郎）" width="390" loading="lazy"><figcaption>入力例</figcaption></figure>
+    </li>
+    <li>
+      <h3>申請区分を選ぶ</h3>
+      <p>残業したときは「残業申請」、遅れて出勤したときは「遅刻連絡」、打刻を忘れた・間違えたときは「打刻漏れ・修正の依頼」を選びます。</p>
+      <figure><img src="img/dakoku_step_kind.png" alt="申請区分の選択例（打刻漏れ・修正の依頼を選択）" width="390" loading="lazy"></figure>
+    </li>
+    <li>
+      <h3>元々のシフトと、実際の時刻を入れる</h3>
+      <p>ずれた打刻1つについて、「元々のシフトの時刻」と「実際に出勤・退勤・休憩した時刻」を入れます。休憩の入りと戻りなど2つあるときは「もう1組追加する」を押してください。</p>
+      <figure><img src="img/dakoku_step_time.png" alt="時刻の入力例：元々のシフト 2026/11/17 23:00、実際の時間 23:05" width="390" loading="lazy"><figcaption>例：23:00退勤のシフトで、23:05に退勤した（打刻を忘れた）場合</figcaption></figure>
+    </li>
+    <li>
+      <h3>理由と承認者を入れて、内容を確認して送信</h3>
+      <p>理由を入れて承認者を選んだら「内容を確認して送信」を押します。確認画面で間違いがなければ「送信する」を押してください。</p>
+      <figure><img src="img/dakoku_step_review.png" alt="送信前の確認画面" width="390" loading="lazy"></figure>
+    </li>
+    <li>
+      <h3>LINEに控えが届きます</h3>
+      <p>送信すると、このLINEに申請内容の控えが届きます。担当者が確認したかどうかは「自分の申請履歴」から見られます。</p>
+    </li>
+  </ol>
+
+  <div class="note">
+    <p>申請した内容を間違えたときや、わからないことがあるときは、このLINEのトークでそのまま連絡してください。</p>
+  </div>
+
+  <div class="cta" style="margin-top:24px;">
+    <a class="btn primary" data-liff="" href="#">申請する</a>
+  </div>
+</main>
+
+<script>
+  // LIFF作成後に差し替える（例：https://liff.line.me/1234567890-AbCdEfGh）
+  const LIFF_URL = 'https://liff.line.me/2012675904-WZHdYxW8';
+  document.querySelectorAll('a[data-liff]').forEach((a) => {
+    if (LIFF_URL.indexOf('REPLACE') === 0) {
+      a.addEventListener('click', (e) => { e.preventDefault(); alert('申請画面は準備中です。'); });
+    } else {
+      a.href = LIFF_URL + a.dataset.liff;
+    }
+  });
+</script>
+</body>
+</html>
