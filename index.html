@@ -361,6 +361,11 @@
   @media (max-width: 400px) {
     .rule-pair { grid-template-columns: 1fr; }
   }
+
+  figure.shot { margin: 12px 0 4px; }
+  figure.shot img { display: block; width: 100%; height: auto; border: 1px solid var(--border); border-radius: 12px; }
+  figure.shot figcaption { font-size: 0.78rem; color: var(--text-muted); margin-top: 6px; }
+  .asterisk { font-size: 0.82rem; color: var(--text-muted); margin-top: -4px; }
 </style>
 </head>
 <body>
@@ -410,13 +415,17 @@
         <li>自分の名前を選択する</li>
         <li>出勤・退勤・休憩入り・休憩戻りに応じて、該当の箇所を押す</li>
       </ol>
+      <figure class="shot">
+        <img src="img/guide_timecard.png" alt="Airシフトのタイムカード画面。左に名前の一覧、右に出勤・退勤・休憩入り・休憩戻りのボタン" width="730" height="395" loading="lazy">
+        <figcaption>タイムカードの画面（左の一覧から自分の名前を選び、右のボタンを押します）</figcaption>
+      </figure>
       <div class="note">
         <span class="note-label">サウナとPlayで店舗が違います</span>
         画面に自分の名前が出てこない場合は、店舗を切り替えてからもう一度タイムカードを押してください。
       </div>
       <div class="ask-staff">
         <svg viewBox="0 0 24 24"><path d="M8.5 9a3.5 3.5 0 1 1 5.5 2.9c-.9.6-1.5 1.3-1.5 2.4"/><circle cx="12" cy="17.2" r=".4" fill="currentColor"/><circle cx="12" cy="12" r="10"/></svg>
-        わからないときは <b>サウナスタッフ・岩本・水上</b> のいずれかに確認してください。
+        <span>わからないときは <b>サウナスタッフ・岩本・水上</b> のいずれかに確認してください。</span>
       </div>
     </section>
 
@@ -442,7 +451,7 @@
         </div>
         <div class="example">例：シフトが17:00〜23:00の場合 → ①16:55／②23:10</div>
       </div>
-      <a class="link-btn" href="https://forms.gle/tUvM9cGr72sotwoa9" target="_blank" rel="noopener">
+      <a class="link-btn" href="https://liff.line.me/2012675904-WZHdYxW8">
         <svg viewBox="0 0 24 24"><path d="M9 12h11M16 7l5 5-5 5"/><path d="M13 5H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h8"/></svg>
         申請フォームを開く
       </a>
@@ -488,7 +497,7 @@
       </div>
       <div class="ask-staff">
         <svg viewBox="0 0 24 24"><path d="M8.5 9a3.5 3.5 0 1 1 5.5 2.9c-.9.6-1.5 1.3-1.5 2.4"/><circle cx="12" cy="17.2" r=".4" fill="currentColor"/><circle cx="12" cy="12" r="10"/></svg>
-        キーボックスの場所・番号は <b>社員</b> に確認してください（解説動画は準備中です）。
+        <span>キーボックスの場所・番号は <b>社員</b> に確認してください（解説動画は準備中です）。</span>
       </div>
     </section>
 
@@ -504,12 +513,17 @@
       </div>
       <p class="sub">早朝手当</p>
       <p>6:00〜9:30の間に勤務した際、15分単位で50円発生します。</p>
+      <p class="asterisk">※年内（12月中）に内容が変わる可能性があります。</p>
       <p class="sub">Stay清掃手当</p>
       <p>Stay清掃を30分以上行った際、人数に応じて手当が発生します。</p>
       <div class="note">
         <span class="note-label">忘れずに</span>
-        時間管理票に名前の記載がない場合は発生しません。
+        時間管理票に名前の記載がない場合は発生しません（下の画像の赤い下線のところに名前を書きます）。
       </div>
+      <figure class="shot">
+        <img src="img/guide_cleaning.png" alt="時間管理票の記入例。清掃実施者の欄に名前を書き、赤い下線で示している" width="640" height="480" loading="lazy">
+        <figcaption>時間管理票の記入例（「清掃実施者」の欄に、清掃した人の名前を書きます）</figcaption>
+      </figure>
       <p class="sub" style="margin-top:14px">アウフグース手当</p>
       <p>アウフグース1回あたり150円の手当が発生します。</p>
     </section>
@@ -584,7 +598,7 @@
       </div>
       <div class="ask-staff">
         <svg viewBox="0 0 24 24"><path d="M8.5 9a3.5 3.5 0 1 1 5.5 2.9c-.9.6-1.5 1.3-1.5 2.4"/><circle cx="12" cy="17.2" r=".4" fill="currentColor"/><circle cx="12" cy="12" r="10"/></svg>
-        サイズ・在庫など詳細は <b>社員</b> に確認してください。
+        <span>サイズ・在庫など詳細は <b>社員</b> に確認してください。</span>
       </div>
     </section>
 
