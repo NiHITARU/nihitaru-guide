@@ -152,6 +152,7 @@
     font-variant-numeric: tabular-nums;
   }
   textarea { resize: vertical; min-height: 72px; line-height: 1.6; }
+  #reason { min-height: 185px; } /* 2026-11-20 例文を長くしたので高さを確保 */
   input:focus-visible, textarea:focus-visible, .chip input:focus-visible + span {
     outline: 2px solid var(--focus);
     outline-offset: 1px;
@@ -467,7 +468,7 @@
     <fieldset>
       <legend>申請理由<span class="req">必須</span></legend>
       <div class="field">
-        <textarea id="reason" name="reason" placeholder="例：バスで寝過ごしてしまい、到着が遅れました。"></textarea>
+        <textarea id="reason" name="reason" placeholder="可能な限り、①何があったか ②いつ・誰に連絡したか ③事前に確認をとったか を書いてください&#10;（例：①お客様対応で退勤が遅れた ②22:50に岩本さんに連絡 ③延長の了承あり）"></textarea>
       </div>
     </fieldset>
 
